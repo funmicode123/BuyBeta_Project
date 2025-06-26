@@ -7,6 +7,7 @@ import buy_beta.data.repositories.UserRepo;
 import buy_beta.dtos.requests.CreateGroupDealRequest;
 import buy_beta.dtos.response.GroupDealResponse;
 import buy_beta.enums.DealStatus;
+import buy_beta.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
