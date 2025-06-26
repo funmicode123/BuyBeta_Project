@@ -98,11 +98,10 @@ module contract::contract_tests {
             2,
             10,
             999_999,
-            ctx
+            ctxt
         );
 
         contract::add_commitment(&mut offer, 1, 90, shipping_info(), BUYER1);
-        // This second call with same buyer should fail
         contract::add_commitment(&mut offer, 1, 90, shipping_info(), BUYER1);
 
         let _ = offer;

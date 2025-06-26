@@ -3,6 +3,10 @@ module contract::contract {
     use sui::coin::{Coin, value, split, join, zero};
     use sui::object::{new};
     use sui::tx_context::{ sender};
+    use contract::platform_config;
+
+    const PLATFORM_FEE_BPS: u64 = 200; 
+    const BPS_DIVISOR: u64 = 10_000;   
 
     const E_ALREADY_FINALIZED: u64 = 0;
     const E_NOT_ENOUGH_COMMITMENTS: u64 = 1;
@@ -158,11 +162,11 @@ module contract::contract {
         }
     }
 
-    public entry fun payout_to_vendor(offer: GroupBuyOffer) {
+    public entry fun payout_to_vendor(offer: GroupBuyOffer, config: &platform_config::PlatformConfig, ctx: &mut TxContext) {
         let GroupBuyOffer {
             id,
             vendor,
-            funds,
+            mut funds,
             product: _,
             unit_price: _,
             min_buyers: _,
@@ -172,6 +176,12 @@ module contract::contract {
             finalized: _,
             commitment_chunks: _
         } = offer;
+
+        let total_amount = value(&funds);
+        let fee_amount = total_amount * PLATFORM_FEE_BPS / BPS_DIVISOR;
+        
+        let fee_coin = split(&mut funds, fee_amount, ctx);
+        transfer::public_transfer(fee_coin, platform_config::get_fee_recipient(config));
 
         transfer::public_transfer(funds, vendor);
         object::delete(id);
@@ -297,4 +307,10 @@ module contract::contract {
         };
         total
     }
+
+    public fun get_escrowed_amount(offer: &GroupBuyOffer): u64 {
+        value(&offer.funds)
+    }
+
+
 }
