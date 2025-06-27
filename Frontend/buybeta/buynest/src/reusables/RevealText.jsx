@@ -1,45 +1,48 @@
 "use client";
 
-import { useRef, useMemo } from "react";
-import { useGSAP } from "@gsap/react";
+import { useRef, useMemo, useLayoutEffect } from "react";
 import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
+import SplitText from "gsap/SplitText";
 
 gsap.registerPlugin(SplitText);
 
 const defaultGsapVars = {
      chars: {
-          x: 150,
+          x: 100,
           opacity: 0,
-          duration: 0.7,
-          ease: "power3",
-          stagger: 0.05,
+          duration: 0.6,      // Faster animation
+          ease: "power3.out",
+          stagger: 0.015,     // Faster staggering
      },
      words: {
-          x: 150,
+          x: 100,
           opacity: 0,
-          ease: "power3",
-          duration: 1,
-          stagger: 0.2,
-          y: -100,
-          rotation: "random(-80, 80)",
+          duration: 0.8,
+          ease: "power3.out",
+          stagger: 0.07,
+          y: -50,
+          rotation: "random(-40, 40)",
      },
      lines: {
-          duration: 1,
           yPercent: 100,
           opacity: 0,
-          stagger: 0.4,
+          duration: 0.5,
+          stagger: 0.2,
           ease: "expo.out",
      },
 };
 
 const RevealText = ({
-                         type = "chars",
+                         type = "chars", // or "words" or "lines"
                          gsapVars = {},
                          splitTextVars = {},
+                         as: Tag = "div", // allows custom tag like "h1", "p"
+                         children,
+                         className = "",
                          ...props
                     }) => {
      const wrapperRef = useRef(null);
+     const splitInstance = useRef(null);
 
      const splitType = useMemo(() => {
           return {
@@ -49,22 +52,30 @@ const RevealText = ({
           }[type];
      }, [type]);
 
-     useGSAP(() => {
-          const element = wrapperRef.current;
-          if (!element) return;
+     useLayoutEffect(() => {
+          const el = wrapperRef.current;
+          if (!el) return;
 
-          const splitText = SplitText.create(element, {
+          splitInstance.current = new SplitText(el, {
                type: splitType,
                ...splitTextVars,
           });
 
-          gsap.from(splitText[type], {
+          gsap.from(splitInstance.current[type], {
                ...defaultGsapVars[type],
                ...gsapVars,
           });
+
+          return () => {
+               splitInstance.current?.revert();
+          };
      }, [type, gsapVars, splitTextVars]);
 
-     return <div ref={wrapperRef} {...props} />;
+     return (
+         <Tag ref={wrapperRef} className={className} {...props}>
+              {children}
+         </Tag>
+     );
 };
 
 export default RevealText;

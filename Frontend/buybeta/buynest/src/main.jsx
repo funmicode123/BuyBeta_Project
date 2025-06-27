@@ -1,10 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.jsx';
+import './index.css';
+import { CartProvider } from './reusables/CartContext.jsx';
+import {WishlistProvider} from "./reusables/WishListContext.jsx";
+import {GroupProvider} from "./reusables/GroupContext.jsx";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <StrictMode>
+         <GroupProvider>
+              <WishlistProvider>
+                   <CartProvider>
+                        <App />
+                   </CartProvider>
+              </WishlistProvider>
+         </GroupProvider>
+    </StrictMode>
+);
