@@ -8,7 +8,9 @@ import lombok.Data;
 @Builder
 public class UserResponse {
     private String userId;
+    private String did;
     private String name;
     private String email;
+    private String walletAddress;
     private UserRole userRole;
 }

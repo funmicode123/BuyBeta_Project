@@ -1,4 +1,4 @@
-package buy_beta.services;
+package buy_beta.services.implementations;
 
 import buy_beta.data.models.GroupDeal;
 import buy_beta.data.models.User;
@@ -8,6 +8,8 @@ import buy_beta.dtos.requests.CreateGroupDealRequest;
 import buy_beta.dtos.response.GroupDealResponse;
 import buy_beta.enums.DealStatus;
 import buy_beta.exceptions.UserNotFoundException;
+import buy_beta.services.contract.BlockChainService;
+import buy_beta.services.interfaces.GroupDealService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +22,14 @@ public class GroupDealServiceImpl implements GroupDealService {
 
     private final GroupDealRepo groupDealRepo;
     private final UserRepo userRepo;
+    private final BlockChainService blockChainService;
 
     @Override
     public GroupDealResponse createDeal(CreateGroupDealRequest request, String vendorId) {
         User vendor = userRepo.findById(vendorId)
                 .orElseThrow(() -> new UserNotFoundException("Vendor not found!"));
+
+        String walletAddress = blockChainService.generateWallet(UUID.randomUUID().toString());
 
         GroupDeal deal = GroupDeal.builder()
                 .productName(request.getProductName())
@@ -34,7 +39,7 @@ public class GroupDealServiceImpl implements GroupDealService {
                 .deadLines(request.getDeadLine())
                 .vendor(vendor)
                 .status(DealStatus.PENDING)
-                .walletAddress(generateWallet())
+                .walletAddress(walletAddress)
                 .build();
 
         groupDealRepo.save(deal);

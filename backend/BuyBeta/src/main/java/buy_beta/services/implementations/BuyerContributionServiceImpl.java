@@ -1,4 +1,4 @@
-package buy_beta.services;
+package buy_beta.services.implementations;
 
 import buy_beta.data.models.BuyerContribution;
 import buy_beta.data.models.GroupDeal;
@@ -12,7 +12,10 @@ import buy_beta.enums.DealStatus;
 import buy_beta.enums.UserRole;
 import buy_beta.exceptions.DealAlreadyExistsException;
 import buy_beta.exceptions.GroupDealNotFoundException;
+import buy_beta.exceptions.InvalidRoleException;
 import buy_beta.exceptions.UserNotFoundException;
+import buy_beta.services.contract.BlockChainService;
+import buy_beta.services.interfaces.BuyerContributionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +27,15 @@ public class BuyerContributionServiceImpl implements BuyerContributionService {
 
     private final BuyerContributionRepo buyerContributionRepo;
     private final UserRepo userRepo;
-    private GroupDealRepo groupDealRepo;
+    private final GroupDealRepo groupDealRepo;
+    private final BlockChainService blockChainService;
     @Override
     public JoinGroupDealResponse joinGroupDeal(JoinGroupDealRequest request) {
         User user = userRepo.findById(request.getUserId())
                 .orElseThrow(()-> new UserNotFoundException("User not found!"));
 
         if (user.getUserRole() != UserRole.BUYER) {
-            throw new RuntimeException("Only buyers can join deals");
+            throw new InvalidRoleException("Only buyers can join deals");
         }
 
         GroupDeal groupDeal = groupDealRepo.findById(request.getGroupDealId())
@@ -48,11 +52,17 @@ public class BuyerContributionServiceImpl implements BuyerContributionService {
                 .status(DealStatus.PENDING)
                 .contributedAt(LocalDateTime.now())
                 .build();
-
+        boolean locked = blockChainService.lockFunds(user.getWalletAddress(), groupDeal.getWalletAddress(), request.getAmount());
+        if (!locked) {
+            throw new RuntimeException("Failed to lock funds");
+        }
         buyerContributionRepo.save(contribution);
 
+
+
+
         return JoinGroupDealResponse.builder()
-                .contributionId(contribution.getDealId())
+                .contributionId(contribution.getContributionId())
                 .userId(user.getUserId())
                 .dealId(groupDeal.getDealId())
                 .amount(contribution.getAmount())

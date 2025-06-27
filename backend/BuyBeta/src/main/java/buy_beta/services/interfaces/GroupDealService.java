@@ -1,4 +1,4 @@
-package buy_beta.services;
+package buy_beta.services.interfaces;
 
 import buy_beta.dtos.requests.CreateGroupDealRequest;
 import buy_beta.dtos.response.GroupDealResponse;

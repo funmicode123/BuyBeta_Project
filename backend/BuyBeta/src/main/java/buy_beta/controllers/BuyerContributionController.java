@@ -2,7 +2,7 @@ package buy_beta.controllers;
 
 import buy_beta.dtos.requests.JoinGroupDealRequest;
 import buy_beta.dtos.response.JoinGroupDealResponse;
-import buy_beta.services.BuyerContributionService;
+import buy_beta.services.interfaces.BuyerContributionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
