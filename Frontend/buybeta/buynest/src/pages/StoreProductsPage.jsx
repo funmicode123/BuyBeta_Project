@@ -2,6 +2,7 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { stores2, products } from "../reusables/data";
 import Logo from "../assets/Screenshot_2025-06-24_125315-removebg-preview 2.png";
+import {Footer} from "../components/Footer.jsx";
 
 export const StoreProductsPage = () => {
      const { storeId } = useParams();
@@ -68,6 +69,7 @@ export const StoreProductsPage = () => {
                        </div>
                    )}
               </div>
+              <Footer/>
          </div>
      );
 };

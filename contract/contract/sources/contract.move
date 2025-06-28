@@ -1,6 +1,7 @@
 module contract::contract {
     use std::string::String;
     use sui::coin::{Coin, value, split, join, zero};
+    use sui::sui::SUI;
     use sui::object::{new};
     use sui::tx_context::{ sender};
     use contract::platform_config;
@@ -45,7 +46,7 @@ module contract::contract {
         is_successful: bool,
         finalized: bool,
         commitment_chunks: vector<CommitmentChunk>,
-        funds: Coin<u64>,
+        funds: Coin<SUI>,
     } 
 
     public struct VendorOffers has key, store {
@@ -54,15 +55,15 @@ module contract::contract {
         offers: vector<UID>,
     }
 
-    public fun new_group_buy_offer(
+    public entry fun new_group_buy_offer(
         product: String,
         unit_price: u64,
         min_buyers: u64,
         max_units: u64,
         deadline: u64,
         ctx: &mut TxContext
-    ): GroupBuyOffer {
-        GroupBuyOffer {
+    ) {
+        let offer = GroupBuyOffer {
             id: new(ctx),
             vendor: sender(ctx),
             product,
@@ -73,14 +74,15 @@ module contract::contract {
             is_successful: false,
             finalized: false,
             commitment_chunks: vector::empty(),
-            funds: zero(ctx),
-        }
+            funds: zero<SUI>(ctx),
+        };
+        transfer::transfer(offer, sender(ctx));
     }
 
     public entry fun add_commitment(
         offer: &mut GroupBuyOffer,
         units: u64,
-        payment: Coin<u64>,
+        payment: Coin<SUI>,
         shipping_info: String,
         buyer: address
     ) {
