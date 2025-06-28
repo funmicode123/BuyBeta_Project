@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useGroups } from "../reusables/GroupContext.jsx";
 import Logo from "../assets/Screenshot_2025-06-24_125315-removebg-preview 2.png";
 import { Home } from "lucide-react";
+import { toast } from "react-toastify";
+import {Footer} from "../components/Footer.jsx";
 
 export const JoinGroupPage = () => {
      const { groupId } = useParams();
      const { groups, joinGroup } = useGroups();
      const [joined, setJoined] = useState(false);
+     const navigate = useNavigate();
 
-     const group = groups.find((g) => String(g.id) === groupId);
+     const group = groups.find((g) => String(g.id) === String(groupId));
 
      if (!group) {
           return (
@@ -28,6 +31,9 @@ export const JoinGroupPage = () => {
           if (!isFull && !joined) {
                joinGroup(group.id);
                setJoined(true);
+               toast.success(`Successfully joined ${group.title}!`);
+               // Optional: Redirect after a delay
+               setTimeout(() => navigate(`/group/${groupId}`), 1500);
           }
      };
 
@@ -65,13 +71,21 @@ export const JoinGroupPage = () => {
                             This group is closed or full.
                        </p>
                    ) : joined ? (
-                       <p className="text-green-600 text-center font-medium">
-                            You have successfully joined this group!
-                       </p>
+                       <div className="text-center">
+                            <p className="text-green-600 font-medium mb-4">
+                                 You have successfully joined this group!
+                            </p>
+                            <Link
+                                to={`/group/${group.id}`}
+                                className="text-blue-600 underline hover:text-blue-800"
+                            >
+                                 View Group Details
+                            </Link>
+                       </div>
                    ) : (
                        <button
                            onClick={handleJoin}
-                           className="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded transition"
+                           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition"
                        >
                             Confirm Join Group
                        </button>
@@ -84,6 +98,7 @@ export const JoinGroupPage = () => {
                         ← Back to Stores
                    </Link>
               </div>
+              <Footer/>
          </div>
      );
 };

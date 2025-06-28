@@ -17,6 +17,9 @@ import {StoreGroupListPage} from "../pages/StoreGroupListPage.jsx";
 import {StoreProductsPage} from "../pages/StoreProductsPage.jsx";
 import {TrackOrderPage} from "../pages/TrackOrderPage.jsx";
 import {OrderPage} from "../pages/OrderPage.jsx";
+import {CategoryGroupsPage} from "../pages/CategoryGroupsPage.jsx";
+import SignInPage from "../pages/SignInPage.jsx";
+import {BrowseItemsPage} from "../pages/BrowseItemsPage.jsx";
 
 
 const route = createBrowserRouter([
@@ -27,6 +30,10 @@ const route = createBrowserRouter([
      {
           path: '/Sign up',
           element: <SignUpPage/>
+     },
+     {
+          path: '/Sign in',
+          element: <SignInPage/>
      },
      {
           path: '/dashBoard',
@@ -90,6 +97,14 @@ const route = createBrowserRouter([
      {
           path: '/order',
           element: <OrderPage/>
+     },
+     {
+          path: '/category/:categoryId/groups',
+          element: <CategoryGroupsPage/>
+     },
+     {
+          path: '/category/:categoryId/items',
+          element: <BrowseItemsPage/>
      }
 
 
