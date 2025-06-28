@@ -6,5 +6,6 @@ import lombok.Data;
 public class JoinGroupDealRequest {
     private String userId;
     private String groupDealId;
+    private int quantity;
     private double amount;
 }

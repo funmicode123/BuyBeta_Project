@@ -9,6 +9,8 @@ public class CreateGroupDealRequest {
     private String productName;
     private String productDescription;
     private double unitPrice;
+    private double totalPrice;
+    private int minParticipants;
     private int maxParticipants;
     private LocalDateTime deadLine;
 }

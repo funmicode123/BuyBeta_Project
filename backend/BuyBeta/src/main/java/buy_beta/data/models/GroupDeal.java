@@ -23,8 +23,10 @@ public class GroupDeal {
     private String walletAddress;
     private String productName;
     private String productDescription;
-    private Double unitPrice;
-    private String maxParticipants;
+    private double unitPrice;
+    private double totalPrice;
+    private int maxParticipants;
+    private int minParticipants = 2;
     private LocalDateTime deadLines;
     private int currentBuyers;
     private DealStatus status;

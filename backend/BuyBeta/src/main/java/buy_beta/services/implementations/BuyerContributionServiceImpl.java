@@ -45,14 +45,18 @@ public class BuyerContributionServiceImpl implements BuyerContributionService {
             throw new DealAlreadyExistsException("User has already joined this deal!");
         }
 
+        int quantity = request.getQuantity();
+        double unitPrice = groupDeal.getUnitPrice();
+        double totalAmount = unitPrice * quantity;
+
         BuyerContribution contribution = BuyerContribution.builder()
                 .userId(user.getUserId())
                 .dealId(groupDeal.getDealId())
-                .amount(request.getAmount())
-                .status(DealStatus.PENDING)
+                .amount(totalAmount)
+                .status(DealStatus.ACTIVE)
                 .contributedAt(LocalDateTime.now())
                 .build();
-        boolean locked = blockChainService.lockFunds(user.getWalletAddress(), groupDeal.getWalletAddress(), request.getAmount());
+        boolean locked = blockChainService.lockFunds(user.getWalletAddress(), groupDeal.getWalletAddress(), totalAmount);
         if (!locked) {
             throw new RuntimeException("Failed to lock funds");
         }

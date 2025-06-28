@@ -5,7 +5,7 @@ import buy_beta.data.repositories.UserRepo;
 import buy_beta.dtos.response.EnokiVerificationResponse;
 import buy_beta.dtos.response.UserResponse;
 import buy_beta.enums.UserRole;
-import buy_beta.services.enoki.EnokiAuthService;
+import buy_beta.services.contract.EnokiAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +23,7 @@ public class AuthController {
     private final EnokiAuthService enokiAuthService;
     @PostMapping("/auth/enoki")
     public ResponseEntity<UserResponse> authWithEnoki(@RequestHeader("Authorization") String bearerToken) {
-        String token = bearerToken.replace("Bearer ", "");
+        String token = bearerToken.replace("Bearer ", "").trim();
         EnokiVerificationResponse enokiUser = enokiAuthService.verifyToken(token);
 
         User user = userRepo.findByWalletAddress(enokiUser.getAddress())

@@ -16,6 +16,8 @@ public class BuyerContribution {
     private String contributionId;
     private String userId;
     private String dealId;
+    private int unit;
+    private int quantity;
     private double amount;
     private DealStatus status;
     private LocalDateTime contributedAt;

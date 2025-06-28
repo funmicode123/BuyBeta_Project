@@ -35,7 +35,8 @@ public class GroupDealServiceImpl implements GroupDealService {
                 .productName(request.getProductName())
                 .unitPrice(request.getUnitPrice())
                 .productDescription(request.getProductDescription())
-                .maxParticipants(String.valueOf(request.getMaxParticipants()))
+                .minParticipants(request.getMinParticipants())
+                .maxParticipants(request.getMaxParticipants())
                 .deadLines(request.getDeadLine())
                 .vendor(vendor)
                 .status(DealStatus.PENDING)
@@ -48,24 +49,37 @@ public class GroupDealServiceImpl implements GroupDealService {
 
     @Override
     public GroupDealResponse getGroupDeal(String groupId, String vendorId) {
-        return null;
+        GroupDeal deal = groupDealRepo.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group deal not found"));
+
+        if (!deal.getVendor().getUserId().equals(vendorId)) {
+            throw new RuntimeException("Vendor does not own this deal");
+        }
+
+        return toResponse(deal);
     }
 
     @Override
     public List<GroupDealResponse> getActiveDeals() {
-        return List.of();
+        List<GroupDeal> deals = groupDealRepo.findByStatusIn(List.of(DealStatus.PENDING, DealStatus.ACTIVE));
+        return deals.stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Override
     public List<GroupDealResponse> getAllGroupDeals() {
-        return List.of();
+        return groupDealRepo.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     private GroupDealResponse toResponse(GroupDeal deal) {
         return GroupDealResponse.builder()
                 .productName(deal.getProductName())
                 .unitPrice(deal.getUnitPrice())
-                .maxParticipants(Integer.parseInt(deal.getMaxParticipants()))
+                .maxParticipants(deal.getMaxParticipants())
                 .deadLine(deal.getDeadLines())
                 .vendorId(deal.getVendor().getUserId())
                 .status(deal.getStatus())
@@ -73,8 +87,6 @@ public class GroupDealServiceImpl implements GroupDealService {
                 .build();
     }
 
-    private String generateWallet() {
-        return UUID.randomUUID().toString();
-    }
+
 
 }

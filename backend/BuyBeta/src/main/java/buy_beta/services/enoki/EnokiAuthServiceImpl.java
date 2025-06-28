@@ -1,15 +1,19 @@
 package buy_beta.services.enoki;
 
 import buy_beta.dtos.response.EnokiVerificationResponse;
+import buy_beta.services.contract.EnokiAuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import org.springframework.http.HttpHeaders;
 
-
-public class EnokiAuthService {
+@Service
+@RequiredArgsConstructor
+public class EnokiAuthServiceImpl implements EnokiAuthService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String ENOKI_VERIFY_URL = "https://api.enoki.world/auth/verify";
 
