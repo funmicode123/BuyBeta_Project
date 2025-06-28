@@ -1,21 +1,24 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { useGroups } from "../reusables/GroupContext.jsx";
-import { stores2 } from "../reusables/data";
+import { sampleGroups, categories2 } from "../reusables/data";
 import { Home, Users, CheckCircle } from "lucide-react";
 import Logo from "../assets/Screenshot_2025-06-24_125315-removebg-preview 2.png";
+import { useGroups } from "../reusables/GroupContext.jsx";
 import { toast } from "react-toastify";
 import {Footer} from "../components/Footer.jsx";
 
-export const StoreGroupListPage = () => {
-     const { storeId } = useParams();
-     const { groups, joinGroup, joinedGroups } = useGroups();
+export const CategoryGroupsPage = () => {
+     const { categoryId } = useParams();
+     const category = categories2.find((cat) => String(cat.id) === categoryId);
+     const groups = sampleGroups.filter((g) => String(g.categoryId) === categoryId);
+     const { joinGroup, joinedGroups } = useGroups();
 
-     const store = stores2.find((s) => s.id === parseInt(storeId));
-     const storeGroups = groups.filter((g) => g.storeId === parseInt(storeId));
-
-     if (!store) {
-          return <div className="p-6 text-center text-gray-600">Store not found.</div>;
+     if (!category) {
+          return (
+              <div className="p-6 text-center text-gray-600">
+                   Category not found. <Link to="/" className="underline text-blue-600">Back to Home</Link>
+              </div>
+          );
      }
 
      const handleJoin = (group) => {
@@ -26,28 +29,31 @@ export const StoreGroupListPage = () => {
      };
 
      return (
-         <div className="min-h-screen bg-blue-50">
+         <div className="min-h-screen bg-blue-50 p-6">
               {/* Header */}
               <div className="bg-[#003399] text-white py-4 px-6 flex items-center justify-between">
                    <img src={Logo} alt="logo" className="h-10 w-auto" />
-                   <h1 className="text-lg font-semibold">Join Groups at {store.title}</h1>
+                   <h1 className="text-lg font-semibold">
+                        Groups in {category.title}
+                   </h1>
                    <Link
-                       to={`/store/${store.id}`}
-                       className="flex items-center gap-1 text-blue-600 bg-white hover:bg-blue-800 hover:text-white px-3 py-2 rounded transition text-sm"
+                       to="/"
+                       className="flex items-center gap-2 text-blue-600 bg-white hover:bg-blue-800 hover:text-white px-3 py-2 rounded transition"
                    >
-                        <Home size={16} />
-                        Back to Store
+                        <Home size={18} />
+                        <span className="font-medium">Back Home</span>
                    </Link>
               </div>
 
-              <div className="max-w-5xl mx-auto p-6">
-                   {storeGroups.length === 0 ? (
-                       <p className="text-center text-gray-600 mt-8">
-                            No active group deals available for this store yet.
+              {/* Group Listings */}
+              <div className="max-w-6xl mx-auto mt-8">
+                   {groups.length === 0 ? (
+                       <p className="text-center text-gray-600">
+                            No groups found for this category.
                        </p>
                    ) : (
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {storeGroups.map((group) => {
+                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {groups.map((group) => {
                                  const progress = Math.min((group.members / group.goal) * 100, 100);
                                  const isJoined = joinedGroups.includes(group.id);
                                  return (
@@ -79,7 +85,6 @@ export const StoreGroupListPage = () => {
                                           <p className="text-sm font-medium text-blue-700 mb-3">
                                                Price: {group.price}
                                           </p>
-
                                           {group.status === "closed" ? (
                                               <button
                                                   className="w-full py-2 text-sm bg-gray-300 text-gray-500 rounded cursor-not-allowed"

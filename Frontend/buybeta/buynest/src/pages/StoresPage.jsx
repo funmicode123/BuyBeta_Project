@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Logo from "../assets/Screenshot_2025-06-24_125315-removebg-preview 2.png";
 import { Link } from "react-router-dom";
-import { Home, Search, Filter } from "lucide-react";
+import { Home, Search } from "lucide-react";
 import { Card, CardContent } from "../components/Card.jsx";
 import { Input } from "../components/Input.jsx";
 import {
@@ -11,6 +11,7 @@ import {
      SelectTrigger,
 } from "../components/Select.jsx";
 import { stores2 } from "../reusables/data.jsx";
+import { Footer } from "../components/Footer.jsx";
 
 export const StoresPage = () => {
      const [searchTerm, setSearchTerm] = useState("");
@@ -40,9 +41,9 @@ export const StoresPage = () => {
      }
 
      return (
-         <div className="min-h-screen bg-gradient-to-b from-[#e6f0ff] to-[#d6e6ff] font-sans">
-              {/* Header */}
-              <div className="bg-[#003399] text-white py-4 px-6 flex items-center justify-between">
+         <div className="min-h-screen bg-gradient-to-b from-[#e6f0ff] to-[#d6e6ff] font-sans pt-20">
+              {/* Fixed Header */}
+              <div className="fixed top-0 left-0 w-full z-20 bg-[#003399] text-white py-4 px-6 flex items-center justify-between shadow">
                    <img src={Logo} alt="logo" className="h-10 w-auto" />
                    <h1 className="text-lg font-semibold">Global Store Directory</h1>
                    <Link
@@ -79,7 +80,6 @@ export const StoresPage = () => {
                                                       name: "Name A-Z",
                                                  }[sortBy]}
                                             </span>
-                                            <Filter className="ml-2 h-4 w-4 text-blue-600" />
                                        </SelectTrigger>
                                        <SelectContent>
                                             <SelectItem value="popular">Most Popular</SelectItem>
@@ -101,7 +101,6 @@ export const StoresPage = () => {
                                                       high: "Over ₦100,000",
                                                  }[priceRange]}
                                             </span>
-                                            <Filter className="ml-2 h-4 w-4 text-blue-600" />
                                        </SelectTrigger>
                                        <SelectContent>
                                             <SelectItem value="all">All Prices</SelectItem>
@@ -156,6 +155,7 @@ export const StoresPage = () => {
                         ))}
                    </div>
               </div>
+              <Footer/>
          </div>
      );
 };

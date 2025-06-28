@@ -8,7 +8,7 @@ import {
      SelectContent,
      SelectItem,
 } from "../components/Select.jsx";
-import { Search, Home, Star, Filter, Users } from "lucide-react";
+import { Search, Home, Star, Users } from "lucide-react";
 import { categories2 } from "../reusables/data.jsx";
 import { Footer } from "../components/Footer.jsx";
 import { Link } from "react-router-dom";
@@ -43,26 +43,26 @@ export const CategoriesPage = () => {
 
      return (
          <div className="min-h-screen bg-gradient-to-b from-[#e6f0ff] to-[#d6e6ff] font-sans">
+              {/* Header */}
               <div className="bg-[#003399] text-white py-4 px-6 flex items-center justify-between">
-                   <div className="flex items-center gap-2">
-                        <img src={Logo} alt="logo" className="h-10 w-auto"/>
-                   </div>
+                   <img src={Logo} alt="logo" className="h-10 w-auto" />
                    <h1 className="text-lg font-semibold">Fashion Categories</h1>
                    <Link
                        to="/"
                        className="flex items-center gap-2 text-blue-600 bg-white hover:bg-blue-800 hover:text-white px-3 py-2 rounded transition"
                    >
-                        <Home size={18}/>
+                        <Home size={18} />
                         <span className="font-medium">Back Home</span>
                    </Link>
               </div>
 
+              {/* Filters */}
               <Card className="mb-8 border-blue-200 mt-8 max-w-6xl mx-auto">
                    <CardContent className="p-6">
                         <div className="flex flex-col md:flex-row md:items-center gap-4 w-full md:w-2/3 mx-auto">
                              <div className="flex items-center gap-3 w-full md:w-auto">
                                   <div className="relative flex-1 min-w-[180px]">
-                                       <Search className="absolute left-3 inset-y-0 my-auto h-4 w-4 text-gray-400"/>
+                                       <Search className="absolute left-3 inset-y-0 my-auto h-4 w-4 text-gray-400" />
                                        <Input
                                            placeholder="Search categories..."
                                            value={searchTerm}
@@ -73,14 +73,7 @@ export const CategoriesPage = () => {
                                   <div className="w-48">
                                        <Select value={sortBy} onValueChange={setSortBy}>
                                             <SelectTrigger>
-                                                 <SelectValue placeholder="Sort by">
-                                                      {{
-                                                           popular: "Most Popular",
-                                                           items: "Most Items",
-                                                           rating: "Highest Rated",
-                                                           name: "Name A-Z",
-                                                      }[sortBy]}
-                                                 </SelectValue>
+                                                 <SelectValue placeholder="Sort by" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                  <SelectItem value="popular">Most Popular</SelectItem>
@@ -93,14 +86,7 @@ export const CategoriesPage = () => {
                                   <div className="w-56">
                                        <Select value={priceRange} onValueChange={setPriceRange}>
                                             <SelectTrigger>
-                                                 <SelectValue placeholder="Price Range">
-                                                      {{
-                                                           all: "All Prices",
-                                                           low: "Under ₦50,000",
-                                                           mid: "₦50,000 - ₦100,000",
-                                                           high: "Over ₦100,000",
-                                                      }[priceRange]}
-                                                 </SelectValue>
+                                                 <SelectValue placeholder="Price Range" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                  <SelectItem value="all">All Prices</SelectItem>
@@ -115,19 +101,19 @@ export const CategoriesPage = () => {
                    </CardContent>
               </Card>
 
+              {/* Categories */}
               <div className="max-w-6xl mx-auto px-4 pb-16">
                    <h3 className="text-lg font-semibold text-blue-900 mb-4">
                         {filtered.length} Categories Available
                    </h3>
                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filtered.map((cat, index) => (
+                        {filtered.map((cat) => (
                             <div
-                                key={cat.id || index}
+                                key={cat.id}
                                 className="bg-white rounded-xl shadow-md p-4 transition hover:shadow-lg relative"
                             >
                                  {cat.featured && (
-                                     <div
-                                         className="absolute top-2 right-2 bg-yellow-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                     <div className="absolute top-2 right-2 bg-yellow-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                                           Featured
                                      </div>
                                  )}
@@ -144,11 +130,12 @@ export const CategoriesPage = () => {
                                       <h4 className="text-blue-900 font-semibold text-lg">{cat.title}</h4>
                                       {cat.rating && (
                                           <span className="flex items-center gap-1 text-sm font-medium">
-                                               <Star className="h-4 w-4 text-yellow-400 fill-yellow-400"/>
+                                               <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                                                <span className="text-black">{cat.rating}</span>
                                           </span>
                                       )}
                                  </div>
+
                                  <p className="text-sm text-gray-500 mb-1">{cat.description}</p>
 
                                  <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
@@ -158,7 +145,7 @@ export const CategoriesPage = () => {
                                       </div>
                                       <div className="flex flex-col items-end">
                                            <span className="flex items-center gap-1 font-bold text-sm text-blue-900">
-                                                <Users className="h-4 w-4 text-green-500"/>
+                                                <Users className="h-4 w-4 text-green-500" />
                                                 {cat.groups || 0}
                                            </span>
                                            <span className="text-xs text-gray-600">Active groups</span>
@@ -166,13 +153,14 @@ export const CategoriesPage = () => {
                                  </div>
 
                                  <div className="text-sm text-gray-800 mb-2">
-                                      Price Range: <span className="font-semibold text-blue-900">{cat.price}</span>
+                                      Price Range:{" "}
+                                      <span className="font-semibold text-blue-900">{cat.price}</span>
                                  </div>
 
                                  {cat.stores && (
                                      <div className="text-sm text-gray-500 mb-2">
                                           Featured Stores:
-                                          <div className="mt-1 flex flex-wrap gap-2 ">
+                                          <div className="mt-1 flex flex-wrap gap-2">
                                                {cat.stores.map((store, i) => (
                                                    <span
                                                        key={i}
@@ -186,21 +174,25 @@ export const CategoriesPage = () => {
                                  )}
 
                                  <div className="flex gap-2 mt-4">
-                                      <button
-                                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs px-4 py-2 rounded">
+                                      <Link
+                                          to={`/category/${cat.id}/items`}
+                                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs px-4 py-2 rounded text-center"
+                                      >
                                            Browse Items
-                                      </button>
-                                      <button
-                                          className="flex-1 border border-blue-600 text-blue-600 hover:bg-blue-50 text-xs px-4 py-2 rounded">
+                                      </Link>
+                                      <Link
+                                          to={`/category/${cat.id}/groups`}
+                                          className="flex-1 border border-blue-600 text-blue-600 hover:bg-blue-50 text-xs px-4 py-2 rounded text-center"
+                                      >
                                            View Groups
-                                      </button>
+                                      </Link>
                                  </div>
                             </div>
                         ))}
                    </div>
               </div>
 
-              <Footer/>
+              <Footer />
          </div>
      );
 };

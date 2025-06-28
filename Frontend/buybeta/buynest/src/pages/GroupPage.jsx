@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Home, Users, Filter } from "lucide-react";
+import { Home, Users } from "lucide-react";
 import { Card, CardContent } from "../components/Card.jsx";
 import { Input } from "../components/Input.jsx";
 import { sampleGroups } from "../reusables/data.jsx";
@@ -11,6 +11,8 @@ import {
      SelectTrigger,
 } from "../components/Select.jsx";
 import Logo from "../assets/Screenshot_2025-06-24_125315-removebg-preview 2.png";
+import { JoinGroupButton } from "../reusables/JoinGroupButton.jsx";
+import {Footer} from "../components/Footer.jsx";
 
 export const GroupPage = () => {
      const [searchTerm, setSearchTerm] = useState("");
@@ -57,7 +59,6 @@ export const GroupPage = () => {
                                                  closed: "Closed",
                                             }[statusFilter]}
                                        </span>
-                                       <Filter className="h-4 w-4 text-blue-600" />
                                   </SelectTrigger>
                                   <SelectContent>
                                        <SelectItem value="all">All Statuses</SelectItem>
@@ -111,22 +112,7 @@ export const GroupPage = () => {
                                       </p>
 
                                       <div className="flex gap-2">
-                                           {group.status === "closed" ? (
-                                               <button
-                                                   className="text-xs px-4 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed w-full"
-                                                   disabled
-                                               >
-                                                    Closed
-                                               </button>
-                                           ) : (
-                                               <Link
-                                                   to={`/join-group/${group.id}`}
-                                                   className="text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded w-full text-center"
-                                               >
-                                                    Join Group
-                                               </Link>
-                                           )}
-
+                                           <JoinGroupButton group={group} />
                                            {group.storeId && (
                                                <Link
                                                    to={`/store/${group.storeId}`}
@@ -141,6 +127,7 @@ export const GroupPage = () => {
                         })}
                    </div>
               </div>
+              <Footer/>
          </div>
      );
 };

@@ -2,13 +2,14 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { stores2 } from "../reusables/data.jsx";
 import { useGroups } from "../reusables/GroupContext.jsx";
-import { Home, Users } from "lucide-react";
+import { Home, Users, CheckCircle } from "lucide-react";
 import Logo from "../assets/Screenshot_2025-06-24_125315-removebg-preview 2.png";
+import {Footer} from "../components/Footer.jsx";
 
 export const StoreDetailsPage = () => {
      const { storeId } = useParams();
      const store = stores2.find((s) => String(s.id) === storeId);
-     const { groups, joinGroup } = useGroups();
+     const { groups, joinGroup, joinedGroups } = useGroups(); // joinedGroups from context
 
      const relatedGroups = groups.filter((g) => String(g.storeId) === storeId);
 
@@ -20,23 +21,17 @@ export const StoreDetailsPage = () => {
           );
      }
 
-     const handleJoin = (id, members, goal, status) => {
-          if (members < goal && status !== "closed") {
-               joinGroup(id);
-          }
-     };
-
      return (
          <div className="min-h-screen bg-blue-50 p-6">
               {/* Header */}
               <div className="bg-[#003399] text-white py-4 px-6 flex items-center justify-between">
-                   <img src={Logo} alt="logo" className="h-10 w-auto"/>
-                   <h1 className="text-2xl font-bold text-blue-900">{store.title}</h1>
+                   <img src={Logo} alt="logo" className="h-10 w-auto" />
+                   <h1 className="text-2xl font-bold text-white">{store.title}</h1>
                    <Link
                        to="/stores"
                        className="flex items-center gap-2 bg-white text-blue-700 hover:bg-blue-700 hover:text-white px-4 py-2 rounded shadow"
                    >
-                        <Home size={18}/>
+                        <Home size={18} />
                         Back to Stores
                    </Link>
               </div>
@@ -52,11 +47,16 @@ export const StoreDetailsPage = () => {
                    <p className="text-sm text-gray-600">Location: {store.location}</p>
                    <p className="text-sm text-gray-600">Rating: ⭐ {store.rating}</p>
                    <p className="text-sm text-gray-600">Items: {store.items}</p>
-                   <p className="text-sm font-semibold text-blue-900 mt-2">Price Range: {store.price}</p>
+                   <p className="text-sm font-semibold text-blue-900 mt-2">
+                        Price Range: {store.price}
+                   </p>
               </div>
 
               {/* Group Offers */}
-              <h2 className="text-xl font-semibold text-blue-900 mb-4">Group Offers from {store.title}</h2>
+              <h2 className="text-xl font-semibold text-blue-900 mb-4">
+                   Group Offers from {store.title}
+              </h2>
+
               {relatedGroups.length === 0 ? (
                   <p className="text-gray-600">No group deals available for this store yet.</p>
               ) : (
@@ -64,6 +64,7 @@ export const StoreDetailsPage = () => {
                        {relatedGroups.map((group) => {
                             const progress = Math.min((group.members / group.goal) * 100, 100);
                             const isClosed = group.status === "closed" || group.members >= group.goal;
+                            const isJoined = joinedGroups?.includes(group.id); // use context
 
                             return (
                                 <div key={group.id} className="bg-white p-4 rounded-lg shadow-md">
@@ -75,17 +76,18 @@ export const StoreDetailsPage = () => {
                                      <h4 className="text-blue-900 font-semibold text-lg">{group.title}</h4>
                                      <p className="text-sm text-gray-500">{group.location}</p>
                                      <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                                          <Users className="h-4 w-4 text-green-500"/>
+                                          <Users className="h-4 w-4 text-green-500" />
                                           {group.members} / {group.goal} members
                                      </div>
                                      <div className="w-full h-2 bg-gray-200 rounded-full my-2">
                                           <div
                                               className="h-2 bg-blue-600 rounded-full"
-                                              style={{width: `${progress}%`}}
+                                              style={{ width: `${progress}%` }}
                                           ></div>
                                      </div>
                                      <p className="text-sm text-gray-800 mb-2">
-                                          Price: <span className="font-semibold">{group.price}</span>
+                                          Price:{" "}
+                                          <span className="font-semibold">{group.price}</span>
                                      </p>
 
                                      {isClosed ? (
@@ -95,17 +97,18 @@ export const StoreDetailsPage = () => {
                                          >
                                               Closed
                                          </button>
+                                     ) : isJoined ? (
+                                         <button
+                                             className="text-xs px-4 py-2 bg-green-600 text-white rounded w-full flex items-center justify-center gap-1"
+                                             disabled
+                                         >
+                                              <CheckCircle size={14} />
+                                              Joined
+                                         </button>
                                      ) : (
                                          <div className="flex flex-col gap-2">
                                               <button
-                                                  onClick={() =>
-                                                      handleJoin(
-                                                          group.id,
-                                                          group.members,
-                                                          group.goal,
-                                                          group.status
-                                                      )
-                                                  }
+                                                  onClick={() => joinGroup(group.id)}
                                                   className="text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded w-full text-center"
                                               >
                                                    Join Group
@@ -123,6 +126,7 @@ export const StoreDetailsPage = () => {
                        })}
                   </div>
               )}
+              <Footer/>
          </div>
      );
 };

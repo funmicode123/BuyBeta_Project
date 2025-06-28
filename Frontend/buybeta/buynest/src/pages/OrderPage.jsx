@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Truck, Eye, XCircle } from "lucide-react";
 import Logo from "../assets/Screenshot_2025-06-24_125315-removebg-preview 2.png";
 import {sampleOrders} from "../reusables/data.jsx";
+import {Footer} from "../components/Footer.jsx";
 
 export const OrderPage = () => {
      return (
@@ -87,6 +88,7 @@ export const OrderPage = () => {
                         </table>
                    </div>
               </div>
+              <Footer/>
          </div>
      );
 };
