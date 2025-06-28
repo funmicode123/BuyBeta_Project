@@ -54,15 +54,15 @@ module contract::contract {
         offers: vector<UID>,
     }
 
-    public fun new_group_buy_offer(
+    public entry fun new_group_buy_offer(
         product: String,
         unit_price: u64,
         min_buyers: u64,
         max_units: u64,
         deadline: u64,
         ctx: &mut TxContext
-    ): GroupBuyOffer {
-        GroupBuyOffer {
+    ) {
+        let offer = GroupBuyOffer {
             id: new(ctx),
             vendor: sender(ctx),
             product,
@@ -74,7 +74,8 @@ module contract::contract {
             finalized: false,
             commitment_chunks: vector::empty(),
             funds: zero(ctx),
-        }
+        };
+        transfer::transfer(offer, sender(ctx));
     }
 
     public entry fun add_commitment(
