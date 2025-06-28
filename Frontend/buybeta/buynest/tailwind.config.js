@@ -15,6 +15,17 @@ module.exports = {
                animation: {
                     scroll: 'scroll 30s linear infinite',
                },
+               colors: {
+                    blue: {
+                         50: '#eff6ff',
+                         100: '#dbeafe',
+                         200: '#bfdbfe',
+                         600: '#2563EB',
+                         700: '#1E40AF',
+                         800: '#1e3a8a',
+                         900: '#1e293b',
+                    },
+               },
           },
      },
      plugins: [],
