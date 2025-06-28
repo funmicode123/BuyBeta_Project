@@ -3,10 +3,11 @@ import { useParams, Link } from "react-router-dom";
 import { stores2 } from "../reusables/data.jsx";
 import { Home } from "lucide-react";
 import Logo from "../assets/Screenshot_2025-06-24_125315-removebg-preview 2.png";
+import {Footer} from "../components/Footer.jsx";
 
 export const SingleStorePage = () => {
      const { storeId } = useParams();
-     const store = stores2.find((s) => s.id === parseInt(storeId));
+     const store = stores2.find((s) => String(s.id) === String(storeId));
 
      if (!store) {
           return (
@@ -20,13 +21,13 @@ export const SingleStorePage = () => {
          <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 font-sans">
               {/* Header */}
               <div className="bg-[#003399] text-white py-4 px-6 flex items-center justify-between">
-                   <img src={Logo} alt="logo" className="h-10 w-auto"/>
+                   <img src={Logo} alt="logo" className="h-10 w-auto" />
                    <h1 className="text-lg font-semibold">{store.title}</h1>
                    <Link
                        to="/stores"
                        className="flex items-center gap-2 text-blue-600 bg-white hover:bg-blue-800 hover:text-white px-3 py-2 rounded transition"
                    >
-                        <Home size={18}/>
+                        <Home size={18} />
                         <span className="font-medium">Back to Stores</span>
                    </Link>
               </div>
@@ -60,7 +61,7 @@ export const SingleStorePage = () => {
                                        View Products
                                   </Link>
                                   <Link
-                                      to={`/stores/${store.id}/groups`}
+                                      to={`/store/${store.id}`}
                                       className="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-2 rounded text-sm text-center"
                                   >
                                        Join Groups
@@ -69,6 +70,7 @@ export const SingleStorePage = () => {
                         </div>
                    </div>
               </div>
+              <Footer/>
          </div>
      );
 };
